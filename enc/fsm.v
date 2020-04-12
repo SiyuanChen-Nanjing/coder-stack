@@ -38,7 +38,20 @@ assign tail_mode = state_curr == TAIL | state_curr == WAIT_TAIL | state_curr == 
 assign enc_en = state_curr == OPERATE | state_curr == LAST_OPERATE | state_curr == TAIL | state_curr == WAIT_TAIL;
 assign tail_counter_enable = state_curr == LAST_OPERATE | state_curr == TAIL | state_curr == WAIT_TAIL;
 assign ready = state_curr == INIT;
-assign out_valid = ((state_curr == OPERATE) & count_valid) | state_curr == LAST_OPERATE | state_curr == TAIL | state_curr == WAIT_TAIL | state_curr == LAST_TAIL;
+//assign out_valid = ((state_curr == OPERATE) & count_valid) | state_curr == LAST_OPERATE | state_curr == TAIL | state_curr == WAIT_TAIL | state_curr == LAST_TAIL;
+assign out_valid_reg_in = state_curr == OPERATE | state_curr == LAST_OPERATE | state_curr == TAIL | state_curr == WAIT_TAIL;
+wire out_valid_reg_in;
+reg out_valid_reg;
+assign out_valid = out_valid_reg;
+always @(posedge clock, posedge aclr) begin
+	if (aclr) begin
+		out_valid_reg <= 1'b0;
+	end
+	else begin
+		out_valid_reg <= out_valid_reg_in;
+	end
+end
+
 
 always @(posedge clock, posedge aclr) begin
 	if (aclr) begin
